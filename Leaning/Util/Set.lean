@@ -3,4 +3,4 @@ import Leaning.Util.Notation
 
 def Set (α : Type u) := α → Prop
 
-instance : Mem α (Set α) := ⟨fun a S => S a⟩
+instance : Membership α (Set α) := ⟨fun a S => S a⟩

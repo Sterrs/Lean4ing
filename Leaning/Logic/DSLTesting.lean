@@ -31,7 +31,7 @@ local syntax num : logic_term
 local macro_rules
   | `(logicTerm $a:logic_term + $b:logic_term) => `(logicTerm add($a, $b))
   | `(logicTerm $a:logic_term * $b:logic_term) => `(logicTerm mul($a, $b))
-  -- Pretty dangerous
+  -- Somewhat dangerous, e.g. logicTerm 10000 would break Lean
   | `(logicTerm $n:num) => do
     let n : Nat := n.1.toNat
     let rec mkNum : Nat → MacroM (TSyntax `logic_term)
@@ -39,9 +39,11 @@ local macro_rules
       | .succ k => do `(logic_term| succ($(← mkNum k)))
     `(logicTerm $(← mkNum n))
 
--- Okay sure but this won't evaluate
+-- :D
 #check formula (∀ x) x + 1 = succ(x) in langOfPA
 #check formula 1 + 1 = 2 in langOfPA
+-- Order of operations is not correct
+#check formula a * b + a * c = a * (b + c) in langOfPA
 
 end PA
 
